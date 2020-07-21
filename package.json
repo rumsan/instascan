@@ -53,6 +53,6 @@
     "fsm-as-promised": "^0.13.0",
     "regenerator-runtime": "^0.12.1",
     "visibilityjs": "^1.2.3",
-    "webrtc-adapter": "^6.3.2"
+    "webrtc-adapter": "^7.6.3"
   }
 }

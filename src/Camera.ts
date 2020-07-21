@@ -33,13 +33,7 @@ export default class Camera {
 		let constraints: any = {
 			audio: false,
 			video: {
-				mandatory: {
-					sourceId: this.id,
-					minWidth: 600,
-					maxWidth: 800,
-					minAspectRatio: 1.6
-				},
-				optional: []
+				facingMode: 'environment'
 			}
 		};
 
@@ -71,6 +65,24 @@ export default class Camera {
 			.filter( d => d.kind === 'videoinput' )
 			.map( d => new Camera( d.deviceId, cameraName( d.label ) ) );
 	}
+
+	static async getBackCamera(options){
+		let defaults = { video: { facingMode: 'environment' }, audio:false };
+		let constraints = Object.assign({}, defaults, options);
+		console.log(constraints)
+		let stream = await navigator.mediaDevices.getUserMedia(constraints);
+	
+		if (stream.getVideoTracks().length > 0) {
+		  const cameras = stream.getVideoTracks();
+		  let currentCamera = cameras[0];
+		  
+		  let devices = await navigator.mediaDevices.enumerateDevices();
+		  return devices
+			.filter(d => d.deviceId === currentCamera.getSettings().deviceId)
+			.map(d => new Camera(d.deviceId, cameraName(d.label)));
+		}
+		return null;
+	  }
 
 	static async ensureAccess() {
 		return await this.wrapErrors( async () => {
